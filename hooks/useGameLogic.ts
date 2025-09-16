@@ -5,7 +5,25 @@ import { Gang, ChallengeType } from '../types';
 import { CARDS } from '../constants';
 
 // --- GEMINI API SETUP ---
-const genAI = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// This function reads the API key securely from the meta tag in index.html
+const getApiKey = (): string => {
+  const meta = document.querySelector('meta[name="gemini-api-key"]');
+  if (meta) {
+    const key = (meta as HTMLMetaElement).content;
+    // This check ensures the placeholder was replaced during deployment.
+    if (key && key !== '__GEMINI_API_KEY__') {
+      return key;
+    }
+  }
+  // This error will be visible in the browser console if the key is missing.
+  const errorMessage = "Clé API Gemini non trouvée. Vérifiez vos paramètres de déploiement Netlify et assurez-vous que la variable d'environnement API_KEY est définie et que la commande de construction est correcte.";
+  console.error(errorMessage);
+  // We can also display this message to the user in the UI.
+  document.body.innerHTML = `<div style="color: white; padding: 20px; font-family: sans-serif; text-align: center;"><h1>Erreur de configuration</h1><p>${errorMessage}</p></div>`;
+  throw new Error(errorMessage);
+};
+
+const genAI = new GoogleGenAI({ apiKey: getApiKey() });
 
 // --- CONSTANTS ---
 const INITIAL_HAND_SIZE = 7;
@@ -104,7 +122,13 @@ export const useGameLogic = () => {
   }, []);
 
   useEffect(() => {
-    resetGame();
+    // A small try-catch block here prevents the app from crashing if the API key logic fails
+    try {
+      getApiKey(); // This will throw an error if the key is not set up, stopping execution.
+      resetGame();
+    } catch (error) {
+      // The error is already handled inside getApiKey(), so we just need to catch it here.
+    }
   }, [resetGame]);
 
   const runResolutionSequence = async (playerCard: Card, aiCard: Card) => {
