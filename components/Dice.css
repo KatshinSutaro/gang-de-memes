@@ -1,0 +1,86 @@
+.dice-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.scene {
+    width: 100px;
+    height: 100px;
+    perspective: 600px;
+}
+
+.dice {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: roll 3s ease-out forwards;
+}
+
+.dice__face {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: ivory;
+    border: 2px solid #6b7280;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.dot {
+    width: 20px;
+    height: 20px;
+    background-color: #1f2937;
+    border-radius: 50%;
+    display: block;
+}
+
+
+/* Face Positions */
+.face--1 { transform: rotateY(0deg) translateZ(50px); }
+.face--6 { transform: rotateY(180deg) translateZ(50px); }
+.face--2 { transform: rotateY(90deg) translateZ(50px); }
+.face--5 { transform: rotateY(-90deg) translateZ(50px); }
+.face--3 { transform: rotateX(90deg) translateZ(50px); }
+.face--4 { transform: rotateX(-90deg) translateZ(50px); }
+
+
+/* Dot Layouts */
+.face--2 { flex-direction: column; justify-content: space-between; }
+.face--2 .dot:nth-child(2) { align-self: flex-end; }
+.face--3 { flex-direction: column; justify-content: space-between; align-items: center; }
+.face--3 .dot:nth-child(1) { align-self: flex-start; }
+.face--3 .dot:nth-child(3) { align-self: flex-end; }
+.face--4, .face--5, .face--6 { flex-direction: row; justify-content: space-between; }
+.face--4 .column, .face--5 .column, .face--6 .column { display: flex; flex-direction: column; justify-content: space-between; }
+.face--5 { align-items: center; }
+
+
+/* Animation */
+@keyframes roll {
+    0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+    30% { transform: rotateX(360deg) rotateY(720deg) rotateZ(1080deg); }
+    60% { transform: rotateX(1080deg) rotateY(1440deg) rotateZ(720deg); }
+    100% { transform: rotateX(1440deg) rotateY(2160deg) rotateZ(1800deg); } /* Ends in a neutral position before final snap */
+}
+
+/* Final states */
+.dice.show--1 { animation-name: roll, show-1; animation-delay: 0s, 3s; animation-duration: 3s, 0.5s; animation-fill-mode: forwards; }
+.dice.show--2 { animation-name: roll, show-2; animation-delay: 0s, 3s; animation-duration: 3s, 0.5s; animation-fill-mode: forwards; }
+.dice.show--3 { animation-name: roll, show-3; animation-delay: 0s, 3s; animation-duration: 3s, 0.5s; animation-fill-mode: forwards; }
+.dice.show--4 { animation-name: roll, show-4; animation-delay: 0s, 3s; animation-duration: 3s, 0.5s; animation-fill-mode: forwards; }
+.dice.show--5 { animation-name: roll, show-5; animation-delay: 0s, 3s; animation-duration: 3s, 0.5s; animation-fill-mode: forwards; }
+.dice.show--6 { animation-name: roll, show-6; animation-delay: 0s, 3s; animation-duration: 3s, 0.5s; animation-fill-mode: forwards; }
+
+@keyframes show-1 { to { transform: rotateY(0deg); } }
+@keyframes show-6 { to { transform: rotateY(-180deg); } }
+@keyframes show-2 { to { transform: rotateY(-90deg); } }
+@keyframes show-5 { to { transform: rotateY(90deg); } }
+@keyframes show-3 { to { transform: rotateX(-90deg); } }
+@keyframes show-4 { to { transform: rotateX(90deg); } }
